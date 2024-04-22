@@ -1,0 +1,12 @@
+(deftest test-fibonacci
+  (is (= (fibonacci 0) 0))
+  (is (= (fibonacci 1) 1))
+  (is (= (fibonacci 2) 1))
+  (is (= (fibonacci 3) 2))
+  (is (= (fibonacci 4) 3))
+  (is (= (fibonacci 5) 5))
+  (is (= (fibonacci 6) 8))
+  (is (= (fibonacci 7) 13))
+  (is (= (fibonacci 8) 21))
+  (is (= (fibonacci 9) 34))
+)
