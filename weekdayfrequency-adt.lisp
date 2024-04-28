@@ -29,9 +29,47 @@ Operations:
 This specification guides the implementation of the ADT in Lisp, with a focus on set-based manipulation and string operations for ease of handling and clarity in operations.
 |#
 
-(defpackage :weekfrequency
+(defpackage :weekdayfrequency
   (:use :cl)
-  (:export :WeekdayFrequency))
+  (:export
+    :weekdayfrequency
+    :make-weekdayfrequency
+    :weekdayfrequency-from-string))
   
-(in-package :weekfrequency)
+(in-package :weekdayfrequency)
+
+
+;;; WeekdayFrequency ADT
+;;; To be extra fast and efficient, we will use a bit vector to represent the days of the week frequency.
+;;; Each bit will represent a day of the week, with the least significant bit representing Monday and the most significant bit representing Sunday.
+;;; For example, the bit vector #b0010101 represents Monday, Wednesday, and Friday.
+(defstruct weekdayfrequency
+  (bit-days #b0000000)) ; Bit vector representing the days of the week frequency
+
+;;; Constants
+(defconstant +monday+ 1)
+(defconstant +tuesday+ 2)
+(defconstant +wednesday+ 4)
+(defconstant +thursday+ 8)
+(defconstant +friday+ 16)
+(defconstant +saturday+ 32)
+(defconstant +sunday+ 64)
+
+;;; WeekdayFrequency-from-string
+;;; Converts a string representation of a weekday frequency to a WeekdayFrequency object.
+;;; The string should contain digits from 1 to 7, representing the days of the week.
+;;; Example: "135" represents Monday, Wednesday, and Friday.
+(defun weekdayfrequency-from-string (str)
+    "Creates a new WeekdayFrequency from a string representation of days."
+    (let ((days 0))
+      (dolist (c (coerce str 'list))
+        (case c
+          (#\1 (setf days (logior days +monday+)))
+          (#\2 (setf days (logior days +tuesday+)))
+          (#\3 (setf days (logior days +wednesday+)))
+          (#\4 (setf days (logior days +thursday+)))
+          (#\5 (setf days (logior days +friday+)))
+          (#\6 (setf days (logior days +saturday+)))
+          (#\7 (setf days (logior days +sunday+)))))
+      (make-weekdayfrequency :bit-days days)))
 
