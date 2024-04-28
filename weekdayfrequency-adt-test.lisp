@@ -147,6 +147,20 @@
         (is equalp (weekdayfrequency-intersection (weekdayfrequency-from-string "1") (weekdayfrequency-from-string "1234567")) (weekdayfrequency-from-string "1"))
         (is equalp (weekdayfrequency-intersection (weekdayfrequency-from-string "12345") (weekdayfrequency-from-string "34567")) (weekdayfrequency-from-string "345"))))
         
+(define-test weekdayfrequency-shift-forward
+    :parent weekdayfrequency-adt-test-suite
+    (is equalp (make-weekdayfrequency) (weekdayfrequency-shift-forward  (make-weekdayfrequency)))
+    (is equalp (weekdayfrequency-from-string "2") (weekdayfrequency-shift-forward (weekdayfrequency-from-string "1")))
+    (is equalp (weekdayfrequency-from-string "3") (weekdayfrequency-shift-forward (weekdayfrequency-from-string "2")))
+    (is equalp (weekdayfrequency-from-string "4") (weekdayfrequency-shift-forward (weekdayfrequency-from-string "3")))
+    (is equalp (weekdayfrequency-from-string "5") (weekdayfrequency-shift-forward (weekdayfrequency-from-string "4")))
+    (is equalp (weekdayfrequency-from-string "6") (weekdayfrequency-shift-forward (weekdayfrequency-from-string "5")))
+    (is equalp (weekdayfrequency-from-string "7") (weekdayfrequency-shift-forward (weekdayfrequency-from-string "6")))
+    (is equalp (weekdayfrequency-from-string "1") (weekdayfrequency-shift-forward (weekdayfrequency-from-string "7")))
+    (is equalp (weekdayfrequency-from-string "234567") (weekdayfrequency-shift-forward (weekdayfrequency-from-string "123456")))
+    (is equalp (weekdayfrequency-from-string "23456") (weekdayfrequency-shift-forward (weekdayfrequency-from-string "12345")))
+    (is equalp (weekdayfrequency-from-string "167") (weekdayfrequency-shift-forward (weekdayfrequency-from-string "567")))
+    (is equalp (weekdayfrequency-from-string "127") (weekdayfrequency-shift-forward (weekdayfrequency-from-string "167"))))
 
 ;; Run the test
 (parachute:test 'weekdayfrequency-adt-test-suite :report 'summary)
