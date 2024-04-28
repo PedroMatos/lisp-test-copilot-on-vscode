@@ -34,26 +34,34 @@ This specification guides the implementation of the ADT in Lisp, with a focus on
   (:export
     :weekdayfrequency
     :make-weekdayfrequency
-    :weekdayfrequency-from-string))
+    :weekdayfrequency-from-string
+    :+monday+
+    :+tuesday+
+    :+wednesday+
+    :+thursday+
+    :+friday+
+    :+saturday+
+    :+sunday+
+    :weekdayfrequency-add-day))
   
 (in-package :weekdayfrequency)
 
 
 ;;; WeekdayFrequency ADT
-;;; To be extra fast and efficient, we will use a bit vector to represent the days of the week frequency.
+;;; To be extra fast and efficient, we will use a binary representation to represent the days of the week frequency.
 ;;; Each bit will represent a day of the week, with the least significant bit representing Monday and the most significant bit representing Sunday.
-;;; For example, the bit vector #b0010101 represents Monday, Wednesday, and Friday.
+;;; For example, the binary number #b0010101 represents Monday, Wednesday, and Friday.
 (defstruct weekdayfrequency
-  (bit-days #b0000000)) ; Bit vector representing the days of the week frequency
+  (bit-days #b0000000))
 
 ;;; Constants
-(defconstant +monday+ 1)
-(defconstant +tuesday+ 2)
-(defconstant +wednesday+ 4)
-(defconstant +thursday+ 8)
-(defconstant +friday+ 16)
-(defconstant +saturday+ 32)
-(defconstant +sunday+ 64)
+(defconstant +monday+ #b0000001)
+(defconstant +tuesday+ #b0000010)
+(defconstant +wednesday+ #b0000100)
+(defconstant +thursday+ #b0001000)
+(defconstant +friday+ #b0010000)
+(defconstant +saturday+ #b0100000)
+(defconstant +sunday+ #b1000000)
 
 ;;; WeekdayFrequency-from-string
 ;;; Converts a string representation of a weekday frequency to a WeekdayFrequency object.
@@ -72,4 +80,8 @@ This specification guides the implementation of the ADT in Lisp, with a focus on
           (#\6 (setf days (logior days +saturday+)))
           (#\7 (setf days (logior days +sunday+)))))
       (make-weekdayfrequency :bit-days days)))
+
+(defun weekdayfrequency-add-day (frequency day)
+  "Returns a new WeekdayFrequency with the given day added."
+  (make-weekdayfrequency :bit-days (logior (weekdayfrequency-bit-days frequency) day)))
 
