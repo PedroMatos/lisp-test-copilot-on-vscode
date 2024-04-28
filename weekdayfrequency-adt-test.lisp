@@ -73,4 +73,4 @@
         (is equalp (weekdayfrequency-add-day wf +sunday+) (weekdayfrequency-from-string "1234567")))))
 
 ;; Run the test
-(parachute:test 'weekdayfrequency-adt-test-suite)
+(parachute:test 'weekdayfrequency-adt-test-suite :report 'summary)
