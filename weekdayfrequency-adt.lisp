@@ -44,7 +44,8 @@ This specification guides the implementation of the ADT in Lisp, with a focus on
     :+sunday+
     :weekdayfrequency-add-day
     :weekdayfrequency-remove-day
-    :weekdayfrequency-union))
+    :weekdayfrequency-union
+    :weekdayfrequency-intersection))
   
 (in-package :weekdayfrequency)
 
@@ -95,3 +96,6 @@ This specification guides the implementation of the ADT in Lisp, with a focus on
   "Returns a new WeekdayFrequency representing the union of two frequencies."
   (make-weekdayfrequency :bit-days (logior (weekdayfrequency-bit-days frequency1) (weekdayfrequency-bit-days frequency2))))
 
+(defun weekdayfrequency-intersection (frequency1 frequency2)
+  "Returns a new WeekdayFrequency representing the intersection of two frequencies."
+  (make-weekdayfrequency :bit-days (logand (weekdayfrequency-bit-days frequency1) (weekdayfrequency-bit-days frequency2))))

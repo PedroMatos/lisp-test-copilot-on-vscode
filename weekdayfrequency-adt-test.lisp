@@ -123,5 +123,30 @@
         (is equalp (weekdayfrequency-union (weekdayfrequency-from-string "1") (weekdayfrequency-from-string "7")) (weekdayfrequency-from-string "17"))
         (is equalp (weekdayfrequency-union (weekdayfrequency-from-string "1") (weekdayfrequency-from-string "1234567")) (weekdayfrequency-from-string "1234567"))))
 
+
+(define-test weekdayfrequency-intersection-test
+        :parent weekdayfrequency-adt-test-suite
+    (let ((wf1 (make-weekdayfrequency))
+          (wf2 (make-weekdayfrequency)))
+        (is equalp (weekdayfrequency-intersection wf1 wf2) (make-weekdayfrequency))
+        (is equalp (weekdayfrequency-intersection wf1 (weekdayfrequency-from-string "1")) (make-weekdayfrequency))
+        (is equalp (weekdayfrequency-intersection wf1 (weekdayfrequency-from-string "2")) (make-weekdayfrequency))
+        (is equalp (weekdayfrequency-intersection wf1 (weekdayfrequency-from-string "3")) (make-weekdayfrequency))
+        (is equalp (weekdayfrequency-intersection wf1 (weekdayfrequency-from-string "4")) (make-weekdayfrequency))
+        (is equalp (weekdayfrequency-intersection wf1 (weekdayfrequency-from-string "5")) (make-weekdayfrequency))
+        (is equalp (weekdayfrequency-intersection wf1 (weekdayfrequency-from-string "6")) (make-weekdayfrequency))
+        (is equalp (weekdayfrequency-intersection wf1 (weekdayfrequency-from-string "7")) (make-weekdayfrequency))
+        (is equalp (weekdayfrequency-intersection wf1 (weekdayfrequency-from-string "1234567")) (make-weekdayfrequency))
+        (is equalp (weekdayfrequency-intersection (weekdayfrequency-from-string "1") (weekdayfrequency-from-string "1"))  (weekdayfrequency-from-string "1"))
+        (is equalp (weekdayfrequency-intersection (weekdayfrequency-from-string "1") (weekdayfrequency-from-string "2")) (make-weekdayfrequency))
+        (is equalp (weekdayfrequency-intersection (weekdayfrequency-from-string "1") (weekdayfrequency-from-string "3")) (make-weekdayfrequency))
+        (is equalp (weekdayfrequency-intersection (weekdayfrequency-from-string "1") (weekdayfrequency-from-string "4")) (make-weekdayfrequency))
+        (is equalp (weekdayfrequency-intersection (weekdayfrequency-from-string "1") (weekdayfrequency-from-string "5")) (make-weekdayfrequency))
+        (is equalp (weekdayfrequency-intersection (weekdayfrequency-from-string "1") (weekdayfrequency-from-string "6")) (make-weekdayfrequency))
+        (is equalp (weekdayfrequency-intersection (weekdayfrequency-from-string "1") (weekdayfrequency-from-string "7")) (make-weekdayfrequency))
+        (is equalp (weekdayfrequency-intersection (weekdayfrequency-from-string "1") (weekdayfrequency-from-string "1234567")) (weekdayfrequency-from-string "1"))
+        (is equalp (weekdayfrequency-intersection (weekdayfrequency-from-string "12345") (weekdayfrequency-from-string "34567")) (weekdayfrequency-from-string "345"))))
+        
+
 ;; Run the test
 (parachute:test 'weekdayfrequency-adt-test-suite :report 'summary)
