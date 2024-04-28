@@ -13,16 +13,16 @@ Constructors:
 - WeekdayFrequency(days): Initializes the frequency with the given days, for example, WeekdayFrequency(135) for Monday, Wednesday, and Friday.
 
 Methods:
-- addDay(day): Adds a specific day to the frequency. This involves converting the frequency to a string if not already in string form, appending the day, sorting the result, and removing duplicates.
-- removeDay(day): Removes a specific day from the frequency. This involves converting the frequency to a string if not already in string form and removing the specified day.
+- addDay(day): Adds a specific day to the frequency.
+- removeDay(day): Removes a specific day from the frequency.
 
 Read/Write:
 - toString(): Returns the string representation of the frequency, allowing for an easy human-readable format.
-- fromString(s): Initializes the frequency from a string by setting the frequency, ensuring there are no duplicates and that the order is sorted.
+- fromString(s): Initializes the frequency from a string by setting the frequency.
 
 Operations:
-- union(other): Combines two frequencies into a new WeekdayFrequency that represents the union of both. This operation involves merging and sorting both frequencies and removing any duplicate entries.
-- intersection(other): Creates a new WeekdayFrequency that represents the common days in two frequencies. This involves intersecting the days listed in both frequencies.
+- union(other): Combines two frequencies into a new WeekdayFrequency that represents the union of both.
+- intersection(other): Creates a new WeekdayFrequency that represents the common days in two frequencies.
 - shiftForward(): Shifts all days in the frequency forward by one day, adjusting for wraparound (e.g., Sunday becomes Monday).
 - shiftBackward(): Shifts all days in the frequency backward by one day, also adjusting for wraparound (e.g., Monday becomes Sunday).
 
