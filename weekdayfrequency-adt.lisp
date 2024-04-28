@@ -42,7 +42,9 @@ This specification guides the implementation of the ADT in Lisp, with a focus on
     :+friday+
     :+saturday+
     :+sunday+
-    :weekdayfrequency-add-day))
+    :weekdayfrequency-add-day
+    :weekdayfrequency-remove-day
+    :weekdayfrequency-union))
   
 (in-package :weekdayfrequency)
 
@@ -84,4 +86,12 @@ This specification guides the implementation of the ADT in Lisp, with a focus on
 (defun weekdayfrequency-add-day (frequency day)
   "Returns a new WeekdayFrequency with the given day added."
   (make-weekdayfrequency :bit-days (logior (weekdayfrequency-bit-days frequency) day)))
+
+(defun weekdayfrequency-remove-day (frequency day)
+  "Returns a new WeekdayFrequency with the given day removed."
+  (make-weekdayfrequency :bit-days (logand (weekdayfrequency-bit-days frequency) (lognot day))))
+
+(defun weekdayfrequency-union (frequency1 frequency2)
+  "Returns a new WeekdayFrequency representing the union of two frequencies."
+  (make-weekdayfrequency :bit-days (logior (weekdayfrequency-bit-days frequency1) (weekdayfrequency-bit-days frequency2))))
 
