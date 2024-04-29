@@ -162,5 +162,21 @@
     (is equalp (weekdayfrequency-from-string "167") (weekdayfrequency-shift-forward (weekdayfrequency-from-string "567")))
     (is equalp (weekdayfrequency-from-string "127") (weekdayfrequency-shift-forward (weekdayfrequency-from-string "167"))))
 
+(define-test weekdayfrequency-shift-backward
+    :parent weekdayfrequency-adt-test-suite
+    (is equalp (make-weekdayfrequency) (weekdayfrequency-shift-backward  (make-weekdayfrequency)))
+    (is equalp (weekdayfrequency-from-string "7") (weekdayfrequency-shift-backward (weekdayfrequency-from-string "1")))
+    (is equalp (weekdayfrequency-from-string "1") (weekdayfrequency-shift-backward (weekdayfrequency-from-string "2")))
+    (is equalp (weekdayfrequency-from-string "2") (weekdayfrequency-shift-backward (weekdayfrequency-from-string "3")))
+    (is equalp (weekdayfrequency-from-string "3") (weekdayfrequency-shift-backward (weekdayfrequency-from-string "4")))
+    (is equalp (weekdayfrequency-from-string "4") (weekdayfrequency-shift-backward (weekdayfrequency-from-string "5")))
+    (is equalp (weekdayfrequency-from-string "5") (weekdayfrequency-shift-backward (weekdayfrequency-from-string "6")))
+    (is equalp (weekdayfrequency-from-string "6") (weekdayfrequency-shift-backward (weekdayfrequency-from-string "7")))
+    (is equalp (weekdayfrequency-from-string "17") (weekdayfrequency-shift-backward (weekdayfrequency-from-string "12")))
+    (is equalp (weekdayfrequency-from-string "12") (weekdayfrequency-shift-backward (weekdayfrequency-from-string "23")))
+    (is equalp (weekdayfrequency-from-string "67") (weekdayfrequency-shift-backward (weekdayfrequency-from-string "71")))
+    (is equalp (weekdayfrequency-from-string "4567") (weekdayfrequency-shift-backward (weekdayfrequency-from-string "1567")))
+    (is equalp (weekdayfrequency-from-string "1234567") (weekdayfrequency-shift-backward (weekdayfrequency-from-string "1234567"))))
+
 ;; Run the test
 (parachute:test 'weekdayfrequency-adt-test-suite :report 'summary)

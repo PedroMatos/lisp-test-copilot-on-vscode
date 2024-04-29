@@ -42,11 +42,14 @@ This specification guides the implementation of the ADT in Lisp, with a focus on
     :+friday+
     :+saturday+
     :+sunday+
+    :+all-days+
+    :+no-days+
     :weekdayfrequency-add-day
     :weekdayfrequency-remove-day
     :weekdayfrequency-union
     :weekdayfrequency-intersection
-    :weekdayfrequency-shift-forward))
+    :weekdayfrequency-shift-forward
+    :weekdayfrequency-shift-backward))
   
 (in-package :weekdayfrequency)
 
@@ -66,6 +69,8 @@ This specification guides the implementation of the ADT in Lisp, with a focus on
 (defconstant +friday+ #b0010000)
 (defconstant +saturday+ #b0100000)
 (defconstant +sunday+ #b1000000)
+(defconstant +all-days+ #b1111111)
+(defconstant +no-days+ #b0000000)
 
 ;;; WeekdayFrequency-from-string
 ;;; Converts a string representation of a weekday frequency to a WeekdayFrequency object.
@@ -103,7 +108,16 @@ This specification guides the implementation of the ADT in Lisp, with a focus on
 
 (defun weekdayfrequency-shift-forward (frequency)
   "Returns a new WeekdayFrequency with all days shifted forward by one day."
-  (let ((frequency (ash (weekdayfrequency-bit-days frequency) 1)))
-    (make-weekdayfrequency :bit-days (if (>= frequency #b10000000)
-                                        (logior (logand frequency #b01111111) #b0000001)
-                                        frequency))))
+  (let ((new-frequency (ash (weekdayfrequency-bit-days frequency) 1)))
+    (make-weekdayfrequency :bit-days (if (> new-frequency +all-days+)
+                                        (logior (logand new-frequency +all-days+) +monday+)
+                                        new-frequency))))
+
+(defun weekdayfrequency-shift-backward (frequency)
+  "Returns a new WeekdayFrequency with all days shifted backward by one day."
+  (let ((new-frequency (ash (weekdayfrequency-bit-days frequency) -1)))
+    ;; If the least significant bit of the original frequency is 1 (+monday+) then
+    ;; we need to wrap it around to +sunday+.
+    (make-weekdayfrequency :bit-days (if (zerop (logand (weekdayfrequency-bit-days frequency) +monday+))
+                                        new-frequency
+                                        (logior (logand new-frequency +all-days+) +sunday+)))))
