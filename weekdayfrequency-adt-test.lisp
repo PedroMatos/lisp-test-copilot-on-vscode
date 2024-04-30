@@ -178,5 +178,5 @@
     (is equalp (weekdayfrequency-from-string "4567") (weekdayfrequency-shift-backward (weekdayfrequency-from-string "1567")))
     (is equalp (weekdayfrequency-from-string "1234567") (weekdayfrequency-shift-backward (weekdayfrequency-from-string "1234567"))))
 
-;; Run the test
+;;; Run the test suite.
 (parachute:test 'weekdayfrequency-adt-test-suite :report 'summary)
