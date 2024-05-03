@@ -258,5 +258,35 @@ previous is a hash table with the previous node in the optimal path to each node
         (do-graph-arrows graph (lambda (arrow) (push arrow result)))
         (is equalp '((a c 2)(a b 1)) (mapcar (lambda (arrow) (list (arrow-source arrow) (arrow-destination arrow) (arrow-weight arrow))) result))))
 
+;;; Lets define a function to get the shortest path between two nodes.
+(defun shortest-path (graph source destination)
+    (multiple-value-bind (distance previous) (dijkstra graph source)
+        (declare (ignore distance))
+        (let ((path '())
+              (current destination))
+            (loop while current
+                do (push current path)
+                (setf current (gethash current previous)))
+            path)))
+
+(define-test test-shortest-path
+    :parent graph-test-suite
+    (let* ((nodes '(a b c d e))
+           (arrows (list (make-arrow 'a 'b 1)
+                         (make-arrow 'a 'c 2)
+                         (make-arrow 'b 'c 3)
+                         (make-arrow 'b 'd 4)
+                         (make-arrow 'c 'd 5)
+                         (make-arrow 'd 'e 6)
+                         (make-arrow 'e 'a 7)
+                         (make-arrow 'e 'b 8)
+                         (make-arrow 'e 'c 9)))
+             (graph (make-graph nodes arrows)))
+        (is equalp '(a b d e) (shortest-path graph 'a 'e))
+        (is equalp '(a b d) (shortest-path graph 'a 'd))
+        (is equalp '(a c) (shortest-path graph 'a 'c))
+        (is equalp '(a b) (shortest-path graph 'a 'b))
+        (is equalp '(a) (shortest-path graph 'a 'a))))
+
 ;;; Run the test suite.
 (parachute:test 'graph-test-suite :report 'summary)
