@@ -226,5 +226,37 @@ previous is a hash table with the previous node in the optimal path to each node
         (is equalp 'b (gethash 'd previous))
         (is equalp 'd (gethash 'e previous)))))
 
+;;; Lets define a graph iterators to traverse the graph.
+;;; The simpler iterators are over the nodes and arrows of the graph.
+;;; do-graph-nodes iterates over the nodes of the graph.
+;;; do-graph-arrows iterates over the arrows of the graph.
+(defun do-graph-nodes (graph function)
+    (dolist (node (graph-nodes graph))
+        (funcall function node)))
+
+(defun do-graph-arrows (graph function)
+    (dolist (arrow (graph-arrows graph))
+        (funcall function arrow)))
+
+(define-test test-do-graph-nodes
+    :parent graph-test-suite
+    (let* ((nodes '(a b c d e))
+           (arrows (list (make-arrow 'a 'b 1)
+                         (make-arrow 'a 'c 2)))
+             (graph (make-graph nodes arrows))
+             (result '()))
+        (do-graph-nodes graph (lambda (node) (push node result)))
+        (is equalp '(e d c b a) result)))
+
+(define-test test-do-graph-arrows
+    :parent graph-test-suite
+    (let* ((nodes '(a b c d e))
+           (arrows (list (make-arrow 'a 'b 1)
+                         (make-arrow 'a 'c 2)))
+             (graph (make-graph nodes arrows))
+             (result '()))
+        (do-graph-arrows graph (lambda (arrow) (push arrow result)))
+        (is equalp '((a c 2)(a b 1)) (mapcar (lambda (arrow) (list (arrow-source arrow) (arrow-destination arrow) (arrow-weight arrow))) result))))
+
 ;;; Run the test suite.
 (parachute:test 'graph-test-suite :report 'summary)
