@@ -31,41 +31,41 @@ Although we follow a TDD the tests are not written in the TDD style. We first wr
 (define-test graph-test-suite)
 
 (define-test test-arrow-constructors
-        :parent graph-test-suite
-        (let ((source 'a)
-              (destination 'b)
-              (weight 1))
-          (is equalp (make-arrow source destination weight) (make-arrow source destination weight))
-          (is eq source (arrow-source (make-arrow source destination weight)))
-          (is eq destination (arrow-destination (make-arrow source destination weight)))
-          (is eq weight (arrow-weight (make-arrow source destination weight)))))
+    :parent graph-test-suite
+    (let ((source 'a)
+          (destination 'b)
+          (weight 1))
+        (is equalp (make-arrow source destination weight) (make-arrow source destination weight))
+        (is eq source (arrow-source (make-arrow source destination weight)))
+        (is eq destination (arrow-destination (make-arrow source destination weight)))
+        (is eq weight (arrow-weight (make-arrow source destination weight)))))
 
 (define-test test-graph-constructors
-        :parent graph-test-suite
-        (let ((nodes '(a b c))
-              (arrows (list (make-arrow 'a 'b 1)
-                            (make-arrow 'b 'c 2))))
-          (is equalp (make-graph nodes arrows) (make-graph nodes arrows))
-          (is equalp nodes (graph-nodes (make-graph nodes arrows)))
-          (is equalp arrows (graph-arrows (make-graph nodes arrows)))))
+    :parent graph-test-suite
+    (let ((nodes '(a b c))
+          (arrows (list (make-arrow 'a 'b 1)
+                        (make-arrow 'b 'c 2))))
+        (is equalp (make-graph nodes arrows) (make-graph nodes arrows))
+        (is equalp nodes (graph-nodes (make-graph nodes arrows)))
+        (is equalp arrows (graph-arrows (make-graph nodes arrows)))))
 
 ;;; Lets implement a function to get the neighbors of a node in a graph.
 (defun neighbors (graph node)
-  (mapcan (lambda (arrow)
-            (if (eq node (arrow-source arrow))
-                (list (arrow-destination arrow))
-                nil))
-          (graph-arrows graph)))
+    (mapcan (lambda (arrow)
+                (if (eq node (arrow-source arrow))
+                    (list (arrow-destination arrow))
+                    nil))
+        (graph-arrows graph)))
 
 (define-test test-neighbors
     :parent graph-test-suite
     (let ((nodes '(a b c))
           (arrows (list (make-arrow 'a 'b 1)
                         (make-arrow 'b 'c 2))))
-      (let ((graph (make-graph nodes arrows)))
-        (is equalp '(b) (neighbors graph 'a))
-        (is equalp '(c) (neighbors graph 'b))
-        (is equalp nil (neighbors graph 'c)))))
+        (let ((graph (make-graph nodes arrows)))
+            (is equalp '(b) (neighbors graph 'a))
+            (is equalp '(c) (neighbors graph 'b))
+            (is equalp nil (neighbors graph 'c)))))
 
 (define-test test-neighbors-2
     :parent graph-test-suite
@@ -105,57 +105,54 @@ distance is a hash table with the distance from the source to each node.
 previous is a hash table with the previous node in the optimal path to each node.
 |#
 (defun dijkstra (graph source)
-  (let ((unvisited (copy-list (graph-nodes graph)))
-        (distance (make-hash-table))
-        (previous (make-hash-table)))
-    (dolist (node (graph-nodes graph))
-      (setf (gethash node distance) most-positive-fixnum)
-      (setf (gethash node previous) nil)
-      (push node unvisited))
-    (setf (gethash source distance) 0)
-    (loop while unvisited
-          do (let ((u (reduce (lambda (a b)
-                                (if (< (gethash a distance) (gethash b distance))
-                                    a
-                                    b))
-                              unvisited)))
-               (setf unvisited (remove u unvisited))
-               (dolist (v (neighbors graph u))
-                 (let ((alternative-path (+ (gethash u distance) (arrow-weight (find-if (lambda (arrow)
-                                                                                             (and (eq u (arrow-source arrow))
-                                                                                                  (eq v (arrow-destination arrow))))
-                                                                                           (graph-arrows graph)))))
-                       (current-distance (gethash v distance)))
-                   (if (< alternative-path current-distance)
-                       (progn
-                         (setf (gethash v distance) alternative-path)
-                         (setf (gethash v previous) u)))))))
+    (let ((unvisited (copy-list (graph-nodes graph)))
+            (distance (make-hash-table))
+            (previous (make-hash-table)))
+        (dolist (node (graph-nodes graph))
+        (setf (gethash node distance) most-positive-fixnum)
+        (setf (gethash node previous) nil)
+        (push node unvisited))
+        (setf (gethash source distance) 0)
+        (loop while unvisited
+            do (let ((u (reduce (lambda (a b)
+                                    (if (< (gethash a distance) (gethash b distance))
+                                        a
+                                        b))
+                                unvisited)))
+                (setf unvisited (remove u unvisited))
+                (dolist (v (neighbors graph u))
+                    (let ((alternative-path (+ (gethash u distance) (arrow-weight (find-if (lambda (arrow)
+                                                                                                (and (eq u (arrow-source arrow))
+                                                                                                    (eq v (arrow-destination arrow))))
+                                                                                            (graph-arrows graph)))))
+                        (current-distance (gethash v distance)))
+                    (if (< alternative-path current-distance)
+                        (progn
+                            (setf (gethash v distance) alternative-path)
+                            (setf (gethash v previous) u)))))))
     (values distance previous)))
 
 (define-test test-dijkstra
-    :parent graph-test-suite
-    (let* ((nodes '(a b c d e))
-          (arrows (list (make-arrow 'a 'b 1)
-                        (make-arrow 'a 'c 2)
-                        (make-arrow 'b 'c 3)
-                        (make-arrow 'b 'd 4)
-                        (make-arrow 'c 'd 5)
-                        (make-arrow 'd 'e 6)))
-          (graph (make-graph nodes arrows)))
-      (let ((distance (make-hash-table))
-            (previous (make-hash-table)))
-        (setf (values distance previous) (dijkstra graph 'a))
-        (is equalp 0 (gethash 'a distance))
-        (is equalp 1 (gethash 'b distance))
-        (is equalp 2 (gethash 'c distance))
-        (is equalp 5 (gethash 'd distance))
-        (is equalp 11 (gethash 'e distance))
-        (is equalp nil (gethash 'a previous))
-        (is equalp 'a (gethash 'b previous))
-        (is equalp 'a (gethash 'c previous))
-        (is equalp 'b (gethash 'd previous))
-        (is equalp 'd (gethash 'e previous)))))
+  :parent graph-test-suite
+  (let* ((nodes '(a b c d e))
+         (arrows (list (make-arrow 'a 'b 1)
+                       (make-arrow 'a 'c 2)
+                       (make-arrow 'b 'c 3)
+                       (make-arrow 'b 'd 4)
+                       (make-arrow 'c 'd 5)
+                       (make-arrow 'd 'e 6)))
+         (graph (make-graph nodes arrows)))
+    (multiple-value-bind (distance previous) (dijkstra graph 'a)
+    (is equalp 0 (gethash 'a distance))
+    (is equalp 1 (gethash 'b distance))
+    (is equalp 2 (gethash 'c distance))
+    (is equalp 5 (gethash 'd distance))
+    (is equalp 11 (gethash 'e distance))
+    (is equalp nil (gethash 'a previous))
+    (is equalp 'a (gethash 'b previous))
+    (is equalp 'a (gethash 'c previous))
+    (is equalp 'b (gethash 'd previous))
+    (is equalp 'd (gethash 'e previous)))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Run the test suite.
 (parachute:test 'graph-test-suite :report 'summary)
