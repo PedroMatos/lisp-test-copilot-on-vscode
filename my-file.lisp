@@ -1,5 +1,6 @@
-
 ;;; Lets start by loading the test library to write the tests.
+;;; We will use the parachute library for this purpose.
+;;; Homepage: https://github.com/Shinmera/parachute
 (ql:quickload "parachute")
 
 (defpackage :my-package
@@ -9,8 +10,19 @@
 
 ;;; Check that parachute is available.
 
-(define-test test-parachute-is-present
-     (true (= 1 1)))
+(define-test test-suite)
 
-(test 'test-parachute-is-present)
+(define-test (test-suite test-parachute-time-limit)
+             :time-limit 0.2
+             (sleep 0.1)
+             (is eql 1 1))
 
+#|
+Let's use a TDD approach:
+|#
+
+(define-test (test-suite test-something)
+              (is eql 1 1))
+
+
+(test '(test-suite))
