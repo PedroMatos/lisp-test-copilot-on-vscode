@@ -17,3 +17,5 @@
 *.wx32fsl
 .vscode/alive/fasl/tmp.lisp
 .vscode/alive/repl-history.json
+# ci/quicklisp.lisp is downloaded from a server while running 0-init.sh
+ci/quicklisp.lisp
