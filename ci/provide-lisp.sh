@@ -1,6 +1,7 @@
 # Install SBCL (Lisp) if not available.
 # ------------------------------------------------------------------------------
 
+# Check and install SBCL if not available
 if [ -z "$(command -v sbcl)" ]; then
     echo "Updating package database..."
     sudo apt-get update
@@ -9,5 +10,3 @@ if [ -z "$(command -v sbcl)" ]; then
 else
     echo "SBCL (Lisp) is already installed."
 fi
-curl -O https://beta.quicklisp.org/quicklisp.lisp
-sbcl --load quicklisp.lisp --eval '(quicklisp-quickstart:install)' --eval '(ql:add-to-init-file)' --quit
