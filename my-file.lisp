@@ -22,7 +22,8 @@ Let's use a TDD approach:
 |#
 
 (define-test (test-suite test-something)
-              (is eql 1 1))
+  ;; Test something to ensure parachute is working.
+  (is eql 1 1))
 
 
 (test '(test-suite))
