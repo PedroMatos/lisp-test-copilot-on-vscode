@@ -1,6 +1,7 @@
 {
     "recommendations": [
         "rheller.alive",
-        "github.copilot-chat"
+        "github.copilot-chat",
+        "github.copilot"
     ]
 }
