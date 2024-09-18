@@ -8,6 +8,7 @@
 
 (in-package :my-package)
 
+
 ;;; Check that parachute is available.
 
 (define-test test-suite)
@@ -21,5 +22,8 @@
 This file contains code that follows a Test-Driven Development (TDD) approach.
 |#
 
-    
+(ql:update-dist "quicklisp")
+;;; Load clml library
+;;; This does not work: (ql:quickload :clml :verbose t)
+
 (test '(test-suite))
