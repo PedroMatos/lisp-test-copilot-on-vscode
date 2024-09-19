@@ -89,24 +89,36 @@ Function Dijkstra returns 2 values: the distance from the source node to each no
       (is equalp (gethash 'b previous) 'a)
       (is equalp (gethash 'c previous) 'b))))
 
+;;; Helper function to find the node with the smallest distance
+(defun find-min-distance-node (nodes distance)
+  (reduce (lambda (a b)
+            (if (< (gethash a distance) (gethash b distance)) a b))
+          nodes))
+
 ;;; Lets implement the Dijkstra algorithm.
 (defun dijkstra (graph source)
   (let ((distance (make-hash-table :test 'eq))
         (previous (make-hash-table :test 'eq))
         (unvisited-nodes (copy-list (graph-nodes graph))))
+    
+    ;; Initialize distances and previous nodes
     (dolist (node (graph-nodes graph))
       (setf (gethash node distance) most-positive-fixnum)
       (setf (gethash node previous) nil))
     (setf (gethash source distance) 0)
+    
+    ;; Main loop
     (loop while unvisited-nodes do
-          (let ((u (car (sort unvisited-nodes (lambda (a b) (< (gethash a distance) (gethash b distance)))))))
+          (let ((u (find-min-distance-node unvisited-nodes distance)))
             (setf unvisited-nodes (remove u unvisited-nodes))
             (dolist (arrow (graph-arrows graph))
-              (when (and (eql (arrow-source arrow) u) (member (arrow-target arrow) unvisited-nodes))
+              (when (and (eql (arrow-source arrow) u)
+                         (member (arrow-target arrow) unvisited-nodes))
                 (let ((alt (+ (gethash u distance) (arrow-weight arrow))))
                   (when (< alt (gethash (arrow-target arrow) distance))
                     (setf (gethash (arrow-target arrow) distance) alt)
                     (setf (gethash (arrow-target arrow) previous) u)))))))
+    
     (values distance previous)))
 
 ;;; Lets implement the Shortest Path algorithm using the Dijkstra algorithm. Shortest Path returns 2 values: the shortest path from the source node to the target node and the distance of the shortest path.
@@ -128,6 +140,80 @@ Function Dijkstra returns 2 values: the distance from the source node to each no
             (setf node (gethash node previous))
             (push node path))
       (values path (gethash target distance)))))
+
+#|
+Time ADT
+
+The time abstract data type (ADT) shall represent time as an integer number of seconds.
+
+The time ADT shall support the following operations:
+- make.time: creates a time ADT from hours, minutes, and seconds.
+- time.hours: returns the hours of the time ADT.
+- time.minutes: returns the minutes of the time ADT.
+- time.seconds: returns the seconds of the time ADT.
+- time.to.string: returns the string representation of the time ADT.
+- time.+ : adds two time ADTs.
+- time.- : subtracts two time ADTs.
+- time.< : compares two time ADTs.
+- time.> : compares two time ADTs.
+- time.<= : compares two time ADTs.
+- time.>= : compares two time ADTs.
+- time.= : compares two time ADTs.
+
+|#
+
+;;; Lets test the time ADT.
+(define-test (test-suite test-time)
+  (let ((time1 (make.time 1 2 3))
+        (time2 (make.time 4 5 6)))
+    (is equalp 1 (time.hours time1))
+    (is equalp 2 (time.minutes time1))
+    (is equalp 3 (time.seconds time1))
+    (is equalp "01:02:03" (time.to.string time1))
+    (is equalp (make.time 5 7 9) (time.+ time1 time2))
+    (is equalp (make.time 3 3 3) (time.- time2 time1))
+    (is eql t (time.< time1 time2))
+    (is eql nil (time.> time1 time2))
+    (is eql t (time.<= time1 time2))
+    (is eql nil (time.>= time1 time2))
+    (is eql nil (time.= time1 time2))))
+
+;;; Lets implement the time ADT.
+(defun make.time (hours minutes seconds)
+  (+ (* hours (* 60 60)) (* minutes 60) seconds))
+
+(defun time.hours (time)
+  (floor (/ time (* 60 60))))
+
+(defun time.minutes (time)
+  (floor (/ (mod time (* 60 60)) 60)))
+
+(defun time.seconds (time)
+  (mod time 60))
+
+(defun time.to.string (time)
+  (format nil "~2,'0D:~2,'0D:~2,'0D" (time.hours time) (time.minutes time) (time.seconds time)))
+
+(defun time.+ (time1 time2)
+  (+ time1 time2))
+
+(defun time.- (time1 time2)
+  (- time1 time2))
+
+(defun time.< (time1 time2)
+  (< time1 time2))
+
+(defun time.> (time1 time2)
+  (> time1 time2))
+
+(defun time.<= (time1 time2)
+  (<= time1 time2))
+
+(defun time.>= (time1 time2)
+  (>= time1 time2))
+
+(defun time.= (time1 time2)
+  (= time1 time2))
 
 ;;; Lets run the tests.
 (test '(test-suite))
