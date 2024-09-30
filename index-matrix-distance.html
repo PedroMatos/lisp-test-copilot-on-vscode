@@ -25,18 +25,25 @@
         .far {
             background-color: green;
         }
+        .center {
+            text-align: center;
+        }
     </style>
 </head>
 <body>
     <h1 style="text-align: center;">Jogo de Distâncias</h1>
-    <button onclick="resetGame()">Reiniciar Jogo</button>
+    <div class="center">
+        <button onclick="resetGame()">Reiniciar Jogo</button>
+    </div>
     <table id="matrix"></table>
-    <p id="score" style="text-align: center;">Cliques: 0</p>
+    <p id="score" style="text-align: center;">Tentativas: 0</p>
+    <p id="message" style="text-align: center;"></p>
 
     <script>
         const matrixSize = 10;
         let hiddenPoint;
         let clickCount = 0;
+        let gameEnded = false;
 
         function initGame() {
             hiddenPoint = {
@@ -44,7 +51,9 @@
                 y: Math.floor(Math.random() * matrixSize)
             };
             clickCount = 0;
-            document.getElementById('score').textContent = 'Cliques: 0';
+            gameEnded = false;
+            document.getElementById('score').textContent = 'Tentativas: 0';
+            document.getElementById('message').textContent = '';
             createMatrix();
         }
 
@@ -63,14 +72,17 @@
         }
 
         function handleCellClick(x, y, cell) {
+            if (gameEnded) return;
+
             clickCount++;
-            document.getElementById('score').textContent = `Cliques: ${clickCount}`;
+            document.getElementById('score').textContent = `Tentativas: ${clickCount}`;
             const distance = calculateDistance(x, y, hiddenPoint.x, hiddenPoint.y);
             cell.textContent = distance;
             cell.className = getDistanceClass(distance);
 
             if (distance == 0) {
-                alert('Parabéns! Você encontrou o ponto escondido!');
+                gameEnded = true;
+                document.getElementById('message').textContent = 'Parabéns! Você encontrou o ponto escondido!';
             }
         }
 
