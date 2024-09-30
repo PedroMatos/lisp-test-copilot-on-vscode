@@ -16,21 +16,41 @@
             border: 1px solid black;
             cursor: pointer;
         }
+        .close {
+            background-color: red;
+        }
+        .medium {
+            background-color: yellow;
+        }
+        .far {
+            background-color: green;
+        }
     </style>
 </head>
 <body>
     <h1 style="text-align: center;">Jogo de Distâncias</h1>
+    <button onclick="resetGame()">Reiniciar Jogo</button>
     <table id="matrix"></table>
+    <p id="score" style="text-align: center;">Cliques: 0</p>
 
     <script>
         const matrixSize = 10;
-        const hiddenPoint = {
-            x: Math.floor(Math.random() * matrixSize),
-            y: Math.floor(Math.random() * matrixSize)
-        };
+        let hiddenPoint;
+        let clickCount = 0;
+
+        function initGame() {
+            hiddenPoint = {
+                x: Math.floor(Math.random() * matrixSize),
+                y: Math.floor(Math.random() * matrixSize)
+            };
+            clickCount = 0;
+            document.getElementById('score').textContent = 'Cliques: 0';
+            createMatrix();
+        }
 
         function createMatrix() {
             const table = document.getElementById('matrix');
+            table.innerHTML = ''; // Clear previous table
             for (let i = 0; i < matrixSize; i++) {
                 const row = document.createElement('tr');
                 for (let j = 0; j < matrixSize; j++) {
@@ -43,15 +63,32 @@
         }
 
         function handleCellClick(x, y, cell) {
+            clickCount++;
+            document.getElementById('score').textContent = `Cliques: ${clickCount}`;
             const distance = calculateDistance(x, y, hiddenPoint.x, hiddenPoint.y);
             cell.textContent = distance;
+            cell.className = getDistanceClass(distance);
+
+            if (distance == 0) {
+                alert('Parabéns! Você encontrou o ponto escondido!');
+            }
         }
 
         function calculateDistance(x1, y1, x2, y2) {
             return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)).toFixed(2);
         }
 
-        createMatrix();
+        function getDistanceClass(distance) {
+            if (distance == 0) return 'close';
+            if (distance <= 3) return 'medium';
+            return 'far';
+        }
+
+        function resetGame() {
+            initGame();
+        }
+
+        initGame();
     </script>
 </body>
 </html>
