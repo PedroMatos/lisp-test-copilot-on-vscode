@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo de Distâncias</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            margin: 20px auto;
+        }
+        td {
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            border: 1px solid black;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Jogo de Distâncias</h1>
+    <table id="matrix"></table>
+
+    <script>
+        const matrixSize = 10;
+        const hiddenPoint = {
+            x: Math.floor(Math.random() * matrixSize),
+            y: Math.floor(Math.random() * matrixSize)
+        };
+
+        function createMatrix() {
+            const table = document.getElementById('matrix');
+            for (let i = 0; i < matrixSize; i++) {
+                const row = document.createElement('tr');
+                for (let j = 0; j < matrixSize; j++) {
+                    const cell = document.createElement('td');
+                    cell.addEventListener('click', () => handleCellClick(i, j, cell));
+                    row.appendChild(cell);
+                }
+                table.appendChild(row);
+            }
+        }
+
+        function handleCellClick(x, y, cell) {
+            const distance = calculateDistance(x, y, hiddenPoint.x, hiddenPoint.y);
+            cell.textContent = distance;
+        }
+
+        function calculateDistance(x1, y1, x2, y2) {
+            return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)).toFixed(2);
+        }
+
+        createMatrix();
+    </script>
+</body>
+</html>
