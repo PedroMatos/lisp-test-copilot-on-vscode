@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Viagens</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+        }
+        input, button {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Calculadora de Viagens</h1>
+        <form id="travel-form">
+            <label for="distance">Distância (km):</label>
+            <input type="number" id="distance" required>
+            
+        <label for="consumption">Consumo de Combustível (l/100km):</label>
+            <input type="number" id="consumption" required>
+            
+            <label for="fuel-price">Preço do Combustível (€/l):</label>
+            <input type="number" id="fuel-price" step="0.01" required>
+            
+            <button type="button" onclick="calculateCost()">Calcular Custo</button>
+        </form>
+        <h2 id="result"></h2>
+    </div>
+
+    <script>
+        function calculateCost() {
+            // Obter os valores dos campos de entrada
+            const distance = document.getElementById('distance').value;
+            const consumption = document.getElementById('consumption').value;
+            const fuelPrice = document.getElementById('fuel-price').value;
+
+            // Calcular o custo da viagem
+            const fuelNeeded = distance / 100 * consumption;
+            const totalCost = fuelNeeded * fuelPrice;
+
+            // Exibir o resultado
+            document.getElementById('result').innerText = `Custo Total da Viagem: €${totalCost.toFixed(2)}`;
+        }
+    </script>
+</body>
+</html>
