@@ -1,3 +1,12 @@
+<!--
+    index-matrix-distance.html
+
+    Este ficheiro HTML é utilizado para calcular e exibir a distância entre elementos numa matriz.
+    O propósito principal é fornecer uma interface visual para a entrada de dados da matriz e 
+    exibir os resultados das distâncias calculadas entre os elementos selecionados.
+    Inclui scripts JavaScript para manipulação da matriz e cálculos de distância, bem como 
+    estilos CSS para apresentação visual.
+-->
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -23,7 +32,7 @@
             background-color: yellow;
         }
         .far {
-            background-color: green;
+            background-color: lightblue;
         }
         .center {
             text-align: center;
@@ -45,6 +54,13 @@
         let clickCount = 0;
         let gameEnded = false;
 
+        /**
+         * Função: initGame
+         * Descrição: Inicializa o jogo, definindo um ponto escondido aleatório na matriz, 
+         *            reiniciando a contagem de cliques e o estado do jogo, e criando a matriz.
+         * Parâmetros: Nenhum
+         * Retorno: Nenhum
+         */
         function initGame() {
             hiddenPoint = {
                 x: Math.floor(Math.random() * matrixSize),
@@ -57,6 +73,13 @@
             createMatrix();
         }
 
+        /**
+         * Função: createMatrix
+         * Descrição: Cria uma matriz de células clicáveis e a insere na tabela HTML. Cada célula 
+         *            possui um evento de clique que chama a função handleCellClick.
+         * Parâmetros: Nenhum
+         * Retorno: Nenhum
+         */
         function createMatrix() {
             const table = document.getElementById('matrix');
             table.innerHTML = ''; // Clear previous table
@@ -71,6 +94,17 @@
             }
         }
 
+        /**
+         * Função: handleCellClick
+         * Descrição: Manipula o evento de clique em uma célula da matriz. Calcula a distância 
+         *            entre a célula clicada e o ponto escondido, atualiza a contagem de cliques 
+         *            e exibe a distância na célula. Se a distância for zero, o jogo termina.
+         * Parâmetros:
+         *   - x (number): Coordenada x da célula clicada.
+         *   - y (number): Coordenada y da célula clicada.
+         *   - cell (HTMLElement): Elemento da célula clicada.
+         * Retorno: Nenhum
+         */
         function handleCellClick(x, y, cell) {
             if (gameEnded) return;
 
@@ -86,16 +120,40 @@
             }
         }
 
+        /**
+         * Função: calculateDistance
+         * Descrição: Calcula a distância euclidiana entre dois pontos (x1, y1) e (x2, y2).
+         * Parâmetros:
+         *   - x1 (number): Coordenada x do primeiro ponto.
+         *   - y1 (number): Coordenada y do primeiro ponto.
+         *   - x2 (number): Coordenada x do segundo ponto.
+         *   - y2 (number): Coordenada y do segundo ponto.
+         * Retorno: A distância euclidiana entre os dois pontos.
+         */
         function calculateDistance(x1, y1, x2, y2) {
             return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)).toFixed(2);
         }
 
+        /**
+         * Função: getDistanceClass
+         * Descrição: Retorna a classe CSS correspondente a uma determinada distância.
+         * Parâmetros:
+         *   - distance (number): Distância a ser classificada.
+         * Retorno: A classe CSS correspondente à distância.
+         */
         function getDistanceClass(distance) {
             if (distance == 0) return 'close';
             if (distance <= 3) return 'medium';
             return 'far';
         }
 
+
+        /**
+         * Função: resetGame
+         * Descrição: Reinicia o jogo, chamando a função initGame.
+         * Parâmetros: Nenhum
+         * Retorno: Nenhum
+         */
         function resetGame() {
             initGame();
         }
