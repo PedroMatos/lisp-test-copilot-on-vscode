@@ -111,22 +111,5 @@ Nodes shall be symbols.
                      (setf (gethash v previous) u))))))
     (values distance previous)))
 
-;;; Lets test the shortest path algorithm.
-(define-test (test-suite test-shortest-path)
-  ;; Lets mock the graph (a b 1) (b c 2) (a c 4)
-  ;; Shortest path returns 2 values, the distance and the path.
-  (let ((graph (make-graph '(a b c) (list (make-arrow 'a 'b 1) (make-arrow 'b 'c 2) (make-arrow 'a 'c 4)))))
-    (multiple-value-bind (distance path) (shortest-path graph 'a 'c)
-      (is eql 3 distance)
-      (is equalp '(a b c) path))))
-
-;;; Lets implement the shortest path algorithm.
-(defun shortest-path (graph source destination)
-  (multiple-value-bind (distance previous) (dijkstra graph source)
-    (let ((path nil))
-      (loop for node = destination then (gethash node previous)
-            while node
-            do (push node path))
-      (values (gethash destination distance) path))))
 
 (test '(test-suite))
