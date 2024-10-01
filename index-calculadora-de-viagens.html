@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Viagens</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        input {
+            width: 100%;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Calculadora de Viagens</h1>
+        <form id="travel-form">
+            <table>
+                <thead>
+                    <tr>
+                        <th> </th>
+                        <th>Viagem 1</th>
+                        <th>Viagem 2</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Distância (km)</td>
+                        <td><input type="number" id="distance1" required></td>
+                        <td><input type="number" id="distance2" required></td>
+                    </tr>
+                    <tr>
+                        <td>Consumo de Combustível (l/100km)</td>
+                        <td><input type="number" id="consumption1" required></td>
+                        <td><input type="number" id="consumption2" required></td>
+                    </tr>
+                    <tr>
+                        <td>Preço do Combustível (€/l)</td>
+                        <td><input type="number" id="fuel-price1" step="0.01" required></td>
+                        <td><input type="number" id="fuel-price2" step="0.01" required></td>
+                    </tr>
+                    <tr>
+                        <td>Velocidade Média (km/h)</td>
+                        <td><input type="number" id="speed1" required></td>
+                        <td><input type="number" id="speed2" required></td>
+                    </tr>
+                    <tr>
+                        <td>Custo Total (€)</td>
+                        <td id="totalCost1"></td>
+                        <td id="totalCost2"></td>
+                    </tr>
+                    <tr>
+                        <td>Tempo de Viagem (horas)</td>
+                        <td id="travelTime1"></td>
+                        <td id="travelTime2"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+    <script>
+        function calculateCost() {
+            // Obter os valores dos campos de entrada para a viagem 1
+            const distance1 = document.getElementById('distance1').value;
+            const consumption1 = document.getElementById('consumption1').value;
+            const fuelPrice1 = document.getElementById('fuel-price1').value;
+            const speed1 = document.getElementById('speed1').value;
+        
+            // Calcular o custo da viagem 1
+            const fuelNeeded1 = distance1 / 100 * consumption1;
+            const totalCost1 = fuelNeeded1 * fuelPrice1;
+        
+            // Calcular o tempo de viagem 1
+            const travelTime1 = distance1 / speed1;
+        
+            // Exibir o resultado da viagem 1
+            document.getElementById('totalCost1').innerText = `€${totalCost1.toFixed(2)}`;
+            document.getElementById('travelTime1').innerText = `${Math.floor(travelTime1)}h${Math.round((travelTime1 % 1) * 60)}m`;
+
+            // Obter os valores dos campos de entrada para a viagem 2
+            const distance2 = document.getElementById('distance2').value;
+            const consumption2 = document.getElementById('consumption2').value;
+            const fuelPrice2 = document.getElementById('fuel-price2').value;
+            const speed2 = document.getElementById('speed2').value;
+        
+            // Calcular o custo da viagem 2
+            const fuelNeeded2 = distance2 / 100 * consumption2;
+            const totalCost2 = fuelNeeded2 * fuelPrice2;
+        
+            // Calcular o tempo de viagem 2
+            const travelTime2 = distance2 / speed2;
+        
+            // Exibir o resultado da viagem 2
+            document.getElementById('totalCost2').innerText = `€${totalCost2.toFixed(2)}`;
+            // Exibir o resultado do tempo de viagem em h:mm
+            document.getElementById('travelTime2').innerText = `${Math.floor(travelTime2)}h${Math.round((travelTime2 % 1) * 60)}m`;
+        }
+        
+        // Adicionar eventos de input aos campos da viagem 1
+        document.getElementById('distance1').addEventListener('input', calculateCost);
+        document.getElementById('consumption1').addEventListener('input', calculateCost);
+        document.getElementById('fuel-price1').addEventListener('input', calculateCost);
+        document.getElementById('speed1').addEventListener('input', calculateCost);
+
+        // Adicionar eventos de input aos campos da viagem 2
+        document.getElementById('distance2').addEventListener('input', calculateCost);
+        document.getElementById('consumption2').addEventListener('input', calculateCost);
+        document.getElementById('fuel-price2').addEventListener('input', calculateCost);
+        document.getElementById('speed2').addEventListener('input', calculateCost);
+    </script>
+</body>
+</html>
