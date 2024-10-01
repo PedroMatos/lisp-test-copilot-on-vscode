@@ -15,7 +15,7 @@
 (define-test (test-suite test-parachute)
              :time-limit 0.2
              (sleep 0.1)
-             (is eql 1 1))
+             (is equalp 1 (+ 0 1)))
 
 #|
 This file contains code that follows a Test-Driven Development (TDD) approach.
